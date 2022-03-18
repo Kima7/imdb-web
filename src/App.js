@@ -1,40 +1,46 @@
-import React from 'react';
+
 import {
   ChakraProvider,
   Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
   theme,
+  Center
 } from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+
+import  MyButton  from './components/MyButton'
+import LogoHome from './components/LogoHome'
+import Login from './components/Login'
+import Register from './components/Register'
+import {useState} from 'react'
 
 function App() {
+
+  const [showLogo, setShowLogo] = useState(true)
+  const [showLogin, setShowLogin] = useState(false)
+  const [showRegister, setShowRegister] = useState(false)
+
+  const handleShowLogin = () => {
+    setShowLogin(true)
+    setShowLogo(false)
+    setShowRegister(false)
+  }
+
+  const handleShowRegister = () => {
+    setShowLogin(false)
+    setShowLogo(false)
+    setShowRegister(true)
+  }
+
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
+       <Box textAlign="right" color={'black'} backgroundColor={'gold'} layerStyle="card" h="3rem" roundedBottom={["none", "none", "2xl"]} alignItems="center" p={1} >
+        <MyButton text='Create a free account' background='seagreen' colorScheme='green' onClick={handleShowRegister}/>
+        <MyButton text='Login' background='seagreen' colorScheme='green' onClick={handleShowLogin}/>
       </Box>
+      <Box paddingTop={6}>
+      {showLogo && <LogoHome/>}
+      </Box>
+        {showLogin && <Login/>}
+        {showRegister && <Register/>}
     </ChakraProvider>
   );
 }
