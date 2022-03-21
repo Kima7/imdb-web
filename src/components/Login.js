@@ -27,14 +27,19 @@ const Login = () => {
         {
             method : 'POST',
             headers : {
-                'Content-type' : 'application/json'
+                'Content-type' : 'application/json' ,
+                'credentials' : 'inlude'
             },
             body : JSON.stringify(user)
         })
 
         const data = await res.json()
+        localStorage.setItem('token', data.token)
         if (data.message !== '')
             setError(data.message)
+        else
+          localStorage.setItem('token', data.token);
+          //localStorageManager.setItem('token', data.token)
         console.log(data.message)
         console.log(data.token)
     }

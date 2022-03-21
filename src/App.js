@@ -1,7 +1,7 @@
 
 import {
   ChakraProvider,
-  theme,
+  extendTheme
 } from '@chakra-ui/react';
 
 import {
@@ -15,8 +15,13 @@ import Nav from './components/Nav';
 
 function App() {
 
+  const config = {
+    initialColorMode: 'dark',
+    useSystemColorMode: false,
+  }
+
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme= {extendTheme({ config })} >
         <Nav/>
         <Routes>
           <Route path="/" element={<LogoHome />} />

@@ -48,7 +48,7 @@ const Register = () => {
         }
         
     }
-
+    
   return (
     <Flex width="full" align="center" justifyContent="center">
       <Box p={10} maxWidth="500px" borderWidth={2} borderRadius={8} boxShadow="lg">
