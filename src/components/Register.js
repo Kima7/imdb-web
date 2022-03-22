@@ -10,6 +10,7 @@ import {
   } from '@chakra-ui/react';
   import { useState } from 'react';
   import ErrorMessage from '../components/ErrorMessage';
+  import { register } from '../services/HttpServices';
 
 const Register = () => {
     
@@ -20,33 +21,13 @@ const Register = () => {
     const [error, setError] = useState('');
     const notFill = name === '' || email === '' || password === '' || confirm_password === ''
 
-    const postRegister = async(e) =>{
-        e.preventDefault();
-        const user={
-            name : name,
-            password : password,
-            email : email,
-            confirm_password : confirm_password
-        }
-        try{
-            setError('')
-            const res = await fetch('http://127.0.0.1:8000/api/register',
-            {
-                method : 'POST',
-                headers : {
-                    'Content-type' : 'application/json'
-                },
-                body : JSON.stringify(user)
-            })
-            const data = await res.json()
-
-            if(data.error !== '')
-                setError('Password not repeated right.')
-            }
-        catch{
-            setError('Email already in use,try again.')
-        }
-        
+    const postRegister = async() =>{
+      
+        setError('')
+        const message = await register({name:name,email:email,password:password,confirm_password:confirm_password})
+          
+        if (message !== '')
+            setError(message)
     }
     
   return (
@@ -57,7 +38,7 @@ const Register = () => {
         </Box>
         <Box my={4} textAlign="left">
         <form>
-        {error && <ErrorMessage message={error} />}
+        {error !=='' && <ErrorMessage message={error}/>}
         <FormControl isRequired>
             <FormLabel>Name</FormLabel>
             <Input 

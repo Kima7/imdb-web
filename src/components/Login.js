@@ -9,6 +9,7 @@ import {
   } from '@chakra-ui/react';
   import { useState } from 'react';
   import ErrorMessage from '../components/ErrorMessage';
+  import { login } from '../services/HttpServices';
 
 const Login = () => {
     
@@ -18,30 +19,14 @@ const Login = () => {
     const notFill = email === '' || password === ''
 
     const postLogin = async() =>{
-        setError('')
-        const user={
-            password : password,
-            email : email
-        }
-        const res = await fetch('http://127.0.0.1:8000/api/login',
-        {
-            method : 'POST',
-            headers : {
-                'Content-type' : 'application/json' ,
-                'credentials' : 'inlude'
-            },
-            body : JSON.stringify(user)
-        })
-
-        const data = await res.json()
-        localStorage.setItem('token', data.token)
-        if (data.message !== '')
-            setError(data.message)
-        else
-          localStorage.setItem('token', data.token);
-          //localStorageManager.setItem('token', data.token)
-        console.log(data.message)
-        console.log(data.token)
+        
+      setError('')
+      const message = await login({email:email,password:password})
+        
+      if (message !== '')
+          setError(message)
+        //else
+          //localStorage.setItem('token', data.token);
     }
 
   return (
