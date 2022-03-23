@@ -11,6 +11,8 @@ import {
   import { useState } from 'react';
   import ErrorMessage from '../components/ErrorMessage';
   import { register } from '../services/HttpServices';
+  import { useNavigate } from 'react-router-dom';
+
 
 const Register = () => {
     
@@ -20,14 +22,20 @@ const Register = () => {
     const [confirm_password, setConfirm_password] = useState('')
     const [error, setError] = useState('');
     const notFill = name === '' || email === '' || password === '' || confirm_password === ''
+    const navigate = useNavigate()
 
     const postRegister = async() =>{
       
         setError('')
         const message = await register({name:name,email:email,password:password,confirm_password:confirm_password})
           
-        if (message !== '')
+        if (message)
             setError(message)
+        else
+        {
+           alert('Successfuly registered!')
+           navigate('/login');
+        }
     }
     
   return (

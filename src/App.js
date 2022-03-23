@@ -12,6 +12,8 @@ import LogoHome from './components/LogoHome'
 import Login from './components/Login'
 import Register from './components/Register'
 import Nav from './components/Nav';
+import Movies from './components/Movies';
+import Movie from './components/Movie';
 
 function App() {
 
@@ -27,6 +29,8 @@ function App() {
           <Route path="/" element={<LogoHome />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="movies" element={<Movies />} />
+          <Route path="movie/:id" element={<Movie />} />
         </Routes>
     </ChakraProvider>
   );

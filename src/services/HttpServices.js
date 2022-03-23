@@ -19,20 +19,20 @@ export const register = async ({name,email,password,confirm_password}) => {
             })
             const data = await res.json()
 
-            console.log(data)
-            console.log(data.error)
-            if (data.error.email)                
-                return data.error.email;
-            else if (data.error.confirm_password)                
-                return data.error.confirm_password;
-            else if (data.error.password)                
-                return data.error.password;
-            else if(data.error.name)                
-                return data.error.name;
+            console.log(data);
+            if (data.error?.email)                
+                return data.error?.email;
+            else if (data.error?.confirm_password)                
+                return data.error?.confirm_password;
+            else if (data.error?.password)                
+                return data.error?.password;
+            else if(data.error?.name)                
+                return data.error?.name;
             }
         catch{
             return 'Registration unsuccessful, try again.'
         }
+        return '';
 }
 
 export const login = async ({email,password}) => {
@@ -53,9 +53,40 @@ export const login = async ({email,password}) => {
         const data = await res.json()
         localStorage.setItem('token', data.token)
 
-        console.log(data.message)
+        //console.log(data.message)
         console.log(data.token)
 
         return data.message
     }
 
+export const getMovies = async () => {
+
+    const res = await fetch(apiUrl+ '/movies',
+    {
+        method : 'GET',
+        headers : {
+            'Content-type' : 'application/json' ,
+            'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        },
+    })
+
+    const data = await res.json()
+    //console.log(data)
+    return data
+}
+
+export const getMovie = async ({id}) => {
+
+    const res = await fetch(apiUrl+ `/movies/${id}`,
+    {
+        method : 'GET',
+        headers : {
+            'Content-type' : 'application/json' ,
+            'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        },
+    })
+
+    const data = await res.json()
+    //console.log(data.data)
+    return data.data
+}

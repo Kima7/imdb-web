@@ -10,6 +10,7 @@ import {
   import { useState } from 'react';
   import ErrorMessage from '../components/ErrorMessage';
   import { login } from '../services/HttpServices';
+  import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     
@@ -17,16 +18,20 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const notFill = email === '' || password === ''
+    const navigate = useNavigate()
 
     const postLogin = async() =>{
         
       setError('')
       const message = await login({email:email,password:password})
         
-      if (message !== '')
+      if (message)
           setError(message)
-        //else
-          //localStorage.setItem('token', data.token);
+      else
+      {
+          alert('Successfuly logged in!')
+          navigate('/movies');
+      }
     }
 
   return (
