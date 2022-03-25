@@ -7,7 +7,7 @@ const Nav = () => {
   return (
     <Flex 
       color={'black'}
-      backgroundColor={'gold'}
+      backgroundColor={'DarkSlateGrey'}
       layerStyle="card"
       h="3rem"
       roundedBottom={['none', 'none', '2xl']}
@@ -15,34 +15,34 @@ const Nav = () => {
       p={1}
       justifyContent="space-between"
       marginBottom={10}>
-    <Flex>
+      <Flex>
           <Link to="/" width={77} height={29} >
-              <Image src={logo} width={83} height={43} borderRadius='2xl' />
-            </Link>
+            <Image src={logo} width={83} height={43} borderRadius='2xl' />
+          </Link>
       </Flex>
       <Flex>
-          <Button 
+        <Button 
             size='md' 
-            background='seagreen' 
-            colorScheme='green' 
+            background={'dimgray'} 
+            colorScheme={'gray' }
             variant='solid' 
             rounded={["2xl"]} 
             fontFamily="mono" 
             margin={0.5}>
               <Link to="/login">Login</Link>
-          </Button>
-          <Button 
+        </Button>
+        <Button 
             size='md' 
-            background='seagreen' 
-            colorScheme='green' 
+            background={'dimgray'} 
+            colorScheme={'gray' } 
             variant='solid' 
             rounded={["2xl"]} 
             fontFamily="mono" 
             margin={0.5}>
               <Link to="/register">Register</Link>
-          </Button> 
+        </Button> 
       </Flex>
-      </Flex>
+    </Flex>
   )
 }
 

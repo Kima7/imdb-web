@@ -90,3 +90,51 @@ export const getMovie = async ({id}) => {
     //console.log(data.data)
     return data.data
 }
+
+export const addMovie = async ({title,description,cover_image,genre}) => {
+
+    const movie={
+        title,
+        description,
+        cover_image,
+        genre
+    }
+
+    try{
+        const res = await fetch( apiUrl +'/movies',
+        {
+            method : 'POST',
+            headers : {
+                'Content-type' : 'application/json',
+                'Accept' : 'application/json',
+                'Authorization' : 'Bearer ' + localStorage.getItem('token')
+            },
+            body : JSON.stringify(movie)
+        })
+        const data = await res.json()
+
+        if (data.message)                
+            return data.message;
+        }
+    catch{
+        return 'Movie not created, try again.'
+    }
+    return '';
+}
+
+export const getGenreTypes = async () => {
+
+    const res = await fetch(apiUrl+ '/genres',
+    {
+        method : 'GET',
+        headers : {
+            'Content-type' : 'application/json' ,
+            'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        },
+    })
+
+    const data = await res.json()
+    console.log(data.data)
+    //const dataArray = Object.values(data)
+    return data.data
+}

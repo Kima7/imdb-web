@@ -21,20 +21,20 @@ const Movie = () => {
   return (
     <Flex p={4} width="full" align="center" justify="center" alignItems="center">
         {movie &&
-            <Box key={movie.id} p='2' m={4} maxW='sm' borderWidth='3px' borderRadius='lg' overflow='hidden' alignItems='center' display='table-column' >
-                <Image src={movie.cover_image} width={'399px'} height={'400px'} borderRadius='2xl' />
-                <Box p='2' >                   
+            <Box key={movie.id} p='2' maxW='sm' borderWidth='3px' borderRadius='lg' overflow='hidden' alignItems='center' >
+                <Image src={movie.cover_image} width={'390px'} height={'350px'} borderRadius='2xl' />
+                <Box p='1' >                   
                         <Box
                             mt='1'
                             fontWeight='bold'
-                            fontSize='2xl'                   
+                            fontSize='3xl'                   
                             lineHeight='tight'                            
                             display='flex' alignItems='center'
                             >
                                 {movie.title}
                             
                         </Box>
-                        <Box Box display='flex' alignItems='left'>
+                        <Box display='flex' alignItems='left'>
                         <Badge borderRadius='full' px='2' colorScheme='teal'>
                             {movie.genre}
                         </Badge>
@@ -43,7 +43,6 @@ const Movie = () => {
                     <Box
                         
                         fontSize='s'
-                        as='h4'
                         lineHeight='tight'
                         
                     >

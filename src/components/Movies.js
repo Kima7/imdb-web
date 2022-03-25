@@ -36,7 +36,7 @@ const Movies = () => {
                             </Link>
                             
                         </Box>
-                        <Box Box display='flex' alignItems='left'>
+                        <Box display='flex' alignItems='left'>
                         <Badge borderRadius='full' px='2' colorScheme='teal'>
                             {movie.genre}
                         </Badge>

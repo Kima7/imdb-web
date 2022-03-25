@@ -14,6 +14,7 @@ import Register from './components/Register'
 import Nav from './components/Nav';
 import Movies from './components/Movies';
 import Movie from './components/Movie';
+import AddMovie from './components/AddMovie';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="movies" element={<Movies />} />
           <Route path="movie/:id" element={<Movie />} />
+          <Route path="addMovie" element={<AddMovie />}/>
         </Routes>
     </ChakraProvider>
   );
