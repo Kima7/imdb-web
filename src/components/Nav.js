@@ -27,7 +27,6 @@ const Nav = () => {
 
 const postLogout = async() =>{
   const message = await logout();
-  getUser();
     if (!user)
     {
       alert(message)

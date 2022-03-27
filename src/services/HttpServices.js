@@ -1,4 +1,3 @@
-const apiUrl = 'http://127.0.0.1:8000/api'
 
 export const register = async ({name,email,password,confirm_password}) => {
 
@@ -9,7 +8,7 @@ export const register = async ({name,email,password,confirm_password}) => {
             confirm_password
         }
         try{
-            const res = await fetch( apiUrl +'/register',
+            const res = await fetch( process.env.REACT_APP_API_URL +'/register',
             {
                 method : 'POST',
                 headers : {
@@ -41,7 +40,7 @@ export const login = async ({email,password}) => {
             password,
             email,
         }
-        const res = await fetch(apiUrl+ '/login',
+        const res = await fetch(process.env.REACT_APP_API_URL + '/login',
         {
             method : 'POST',
             headers : {
@@ -61,7 +60,7 @@ export const login = async ({email,password}) => {
 
     export const logout = async () => {
 
-        const res = await fetch(apiUrl+ '/logout',
+        const res = await fetch(process.env.REACT_APP_API_URL + '/logout',
         {
             method : 'POST',
             headers : {
@@ -80,7 +79,7 @@ export const login = async ({email,password}) => {
 
     export const me = async () => {
 
-        const res = await fetch(apiUrl+ '/me',
+        const res = await fetch(process.env.REACT_APP_API_URL + '/me',
         {
             method : 'POST',
             headers : {
@@ -98,7 +97,7 @@ export const login = async ({email,password}) => {
 
 export const getMovies = async () => {
 
-    const res = await fetch(apiUrl+ '/movies',
+    const res = await fetch(process.env.REACT_APP_API_URL + '/movies',
     {
         method : 'GET',
         headers : {
@@ -114,7 +113,7 @@ export const getMovies = async () => {
 
 export const getMovie = async ({id}) => {
 
-    const res = await fetch(apiUrl+ `/movies/${id}`,
+    const res = await fetch(process.env.REACT_APP_API_URL + `/movies/${id}`,
     {
         method : 'GET',
         headers : {
@@ -138,7 +137,7 @@ export const addMovie = async ({title,description,cover_image,genre}) => {
     }
 
     try{
-        const res = await fetch( apiUrl +'/movies',
+        const res = await fetch( process.env.REACT_APP_API_URL +'/movies',
         {
             method : 'POST',
             headers : {
@@ -161,7 +160,7 @@ export const addMovie = async ({title,description,cover_image,genre}) => {
 
 export const getGenreTypes = async () => {
 
-    const res = await fetch(apiUrl+ '/genres',
+    const res = await fetch(process.env.REACT_APP_API_URL + '/genres',
     {
         method : 'GET',
         headers : {
