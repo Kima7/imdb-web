@@ -1,8 +1,48 @@
-import { Flex , Button , Image} from '@chakra-ui/react';
+import { 
+  Flex , 
+  Button , 
+  Image,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton
+} from '@chakra-ui/react';
+import {  AddIcon, HamburgerIcon, ExternalLinkIcon} from '@chakra-ui/icons'
 import { Link } from 'react-router-dom';
 import logo from '../IMDB.jpeg';
+import { useState, useEffect } from 'react';
+import { me, logout } from '../services/HttpServices';
+import { useNavigate } from 'react-router-dom';
 
 const Nav = () => {
+
+  const [user, setUser] = useState('');
+  const navigate = useNavigate();
+
+  const getUser = async() =>{
+    const data = await me();
+    setUser(data);     
+}
+
+const postLogout = async() =>{
+  const message = await logout();
+  getUser();
+    if (!user)
+    {
+      alert(message)
+      navigate('/movies');
+    }
+    else
+    {
+      alert(message)
+      navigate('/');
+    }
+}
+
+useEffect(() => {
+    getUser();
+  },[]);
 
   return (
     <Flex 
@@ -14,13 +54,22 @@ const Nav = () => {
       alignItems="center"
       p={1}
       justifyContent="space-between"
-      marginBottom={10}>
-      <Flex>
+      marginBottom={5}>     
+      {!user ? 
+      <Flex display={user}>
           <Link to="/" width={77} height={29} >
             <Image src={logo} width={83} height={43} borderRadius='2xl' />
           </Link>
+      </Flex> 
+      : 
+      <Flex display={user}>
+        <Link to="/movies" width={77} height={29} >
+          <Image src={logo} width={83} height={43} borderRadius='2xl' />
+        </Link>
       </Flex>
-      <Flex>
+      }
+     {!user ? 
+     <Flex>
         <Button 
             size='md' 
             background={'dimgray'} 
@@ -41,8 +90,31 @@ const Nav = () => {
             margin={0.5}>
               <Link to="/register">Register</Link>
         </Button> 
+      </Flex> 
+      : 
+      <Flex 
+        background={'dimgray'} 
+        fontFamily="mono" 
+        margin={1.5} >
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            aria-label='Options'
+            icon={<HamburgerIcon />}
+            variant='outline'
+          />
+          <MenuList>
+            <MenuItem icon={<AddIcon />} as={Link} to="/addMovie" >
+                Create movie
+            </MenuItem>              
+            <MenuItem icon={<ExternalLinkIcon />} onClick={postLogout} >
+                Logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </Flex>
-    </Flex>
+  }
+  </Flex>
   )
 }
 

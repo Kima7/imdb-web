@@ -59,6 +59,43 @@ export const login = async ({email,password}) => {
         return data.message
     }
 
+    export const logout = async () => {
+
+        const res = await fetch(apiUrl+ '/logout',
+        {
+            method : 'POST',
+            headers : {
+                'Content-type' : 'application/json' ,
+                'Authorization' : 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+
+        const message = await res.json();
+        if (message.message === 'You logged out successfully!')
+            localStorage.removeItem('token')
+        console.log(message.message)
+
+        return message.message
+    }
+
+    export const me = async () => {
+
+        const res = await fetch(apiUrl+ '/me',
+        {
+            method : 'POST',
+            headers : {
+                'Content-type' : 'application/json' ,
+                'Authorization' : 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+
+        const data = await res.json()
+
+        console.log(data)
+
+        return data
+    }
+
 export const getMovies = async () => {
 
     const res = await fetch(apiUrl+ '/movies',
