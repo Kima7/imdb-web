@@ -20,12 +20,12 @@ const Nav = () => {
   const [user, setUser] = useState('');
   const navigate = useNavigate();
 
-  const getUser = async() =>{
+  async function getUser(){
     const data = await me();
     setUser(data);     
 }
 
-const postLogout = async() =>{
+async function postLogout(){
   const message = await logout();
     if (!user)
     {

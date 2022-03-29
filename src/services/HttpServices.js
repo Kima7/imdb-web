@@ -1,5 +1,5 @@
 
-export const register = async ({name,email,password,confirm_password}) => {
+export async function register({name,email,password,confirm_password}){
 
         const user={
             name,
@@ -34,7 +34,7 @@ export const register = async ({name,email,password,confirm_password}) => {
         return '';
 }
 
-export const login = async ({email,password}) => {
+export async function login({email,password}) {
 
         const user={
             password,
@@ -58,7 +58,7 @@ export const login = async ({email,password}) => {
         return data.message
     }
 
-    export const logout = async () => {
+    export async function logout(){
 
         const res = await fetch(process.env.REACT_APP_API_URL + '/logout',
         {
@@ -77,7 +77,7 @@ export const login = async ({email,password}) => {
         return message.message
     }
 
-    export const me = async () => {
+    export async function me(){
 
         const res = await fetch(process.env.REACT_APP_API_URL + '/me',
         {
@@ -89,13 +89,10 @@ export const login = async ({email,password}) => {
         })
 
         const data = await res.json()
-
-        console.log(data)
-
         return data
     }
 
-export const getMovies = async () => {
+export async function getMovies(){
 
     const res = await fetch(process.env.REACT_APP_API_URL + '/movies',
     {
@@ -107,11 +104,10 @@ export const getMovies = async () => {
     })
 
     const data = await res.json()
-    //console.log(data)
     return data
 }
 
-export const getMovie = async ({id}) => {
+export async function getMovie({id}){
 
     const res = await fetch(process.env.REACT_APP_API_URL + `/movies/${id}`,
     {
@@ -127,7 +123,7 @@ export const getMovie = async ({id}) => {
     return data.data
 }
 
-export const addMovie = async ({title,description,cover_image,genre}) => {
+export async function addMovie({title,description,cover_image,genre}){
 
     const movie={
         title,
@@ -158,7 +154,7 @@ export const addMovie = async ({title,description,cover_image,genre}) => {
     return '';
 }
 
-export const getGenreTypes = async () => {
+export async function getGenreTypes(){
 
     const res = await fetch(process.env.REACT_APP_API_URL + '/genres',
     {
@@ -170,7 +166,22 @@ export const getGenreTypes = async () => {
     })
 
     const data = await res.json()
-    console.log(data.data)
+    //console.log(data.data)
     //const dataArray = Object.values(data)
     return data.data
+}
+
+export async function filterMovies({genre}){
+
+    const res = await fetch(process.env.REACT_APP_API_URL + `/genreFilter/${genre}`,
+    {
+        method : 'GET',
+        headers : {
+            'Content-type' : 'application/json' ,
+            'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        },
+    })
+
+    const data = await res.json()
+    return data
 }
