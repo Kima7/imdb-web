@@ -21,7 +21,7 @@ class ApiService {
     console.log(responseData);
 
     if (!response.ok) {
-      throw responseData?.error;
+      throw responseData?.message;
       //throw new Exception(responseData?.error);
     }
 

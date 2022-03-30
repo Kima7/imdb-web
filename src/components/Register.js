@@ -6,6 +6,7 @@ import {
   FormLabel,
   Input,
   Button,
+  Center
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
@@ -34,15 +35,14 @@ const Register = () => {
       alert('Successfuly registered!');
       navigate('/login');
     } catch (e) {
-      setError(e[0]);
+      setError(e);
     }
   };
 
   return (
-    <Flex width="full" align="center" justifyContent="center">
+    <Flex justify={'center'} width="full" >
       <Box
-        p={10}
-        maxWidth="500px"
+        p={10}      
         borderWidth={2}
         borderRadius={8}
         boxShadow="lg"
@@ -53,7 +53,7 @@ const Register = () => {
         <Box my={4} textAlign="left">
           <form>
             {error !== '' && <ErrorMessage message={error} />}
-            <FormControl isRequired>
+            <FormControl isRequired> 
               <FormLabel>Name</FormLabel>
               <Input
                 type="text"

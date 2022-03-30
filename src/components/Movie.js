@@ -1,20 +1,24 @@
-import { useParams, Link } from 'react-router-dom';
-import { Flex, Button, Image, Box, Badge } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
+import { Flex, Image, Box, Badge } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import { getMovie } from '../services/HttpServices';
+import movieService from '../services/MovieService';
 
 const Movie = () => {
   let params = useParams();
   const [movie, setMovie] = useState();
 
-  const movieObject = async () => {
-    const id = params.id;
-    const data = await getMovie({ id });
-    setMovie(data);
+  const getMovie = async () => {
+    try {
+      const id = params.id;
+      const { data } = await movieService.getMovie({ id });
+      setMovie(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    movieObject();
+    getMovie();
   }, []);
 
   return (

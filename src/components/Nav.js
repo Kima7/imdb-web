@@ -45,7 +45,7 @@ async function postLogout(){
 
 useEffect(() => {
     getUser();
-  },[]);
+  },[localStorage.getItem('token')]);
 
   return (
     <Flex 

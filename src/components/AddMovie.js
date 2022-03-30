@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
-import { addMovie, getGenreTypes } from '../services/HttpServices';
+import movieService from '../services/MovieService';
 
 const AddMovie = () => {
   const [title, setTitle] = useState('');
@@ -25,28 +25,32 @@ const AddMovie = () => {
 
   const postMovie = async () => {
     setError('');
-    const message = await addMovie({
-      title: title,
-      description: description,
-      cover_image: cover_image,
-      genre: genre,
-    });
-
-    if (message) setError(message);
-    else {
+    try {
+      await movieService.addMovie({
+        title: title,
+        description: description,
+        cover_image: cover_image,
+        genre: genre,
+      });
       alert('Movie created successfully!');
       setTitle('');
       setDescrription('');
       setCover_image('');
       setGenre('');
+    } catch (error) {
+      setError(error);
     }
   };
 
-  const getGenres = async () => {
-    const data = await getGenreTypes();
-    setAllGenres(data);
-    console.log(allGenres);
-  };
+  async function getGenres() {
+    try {
+      const { data } = await movieService.getGenreTypes();
+      setAllGenres(data);
+    } catch (error) {
+      console.log(error);
+      // Ovde bi hendlala neki error u koliko je potrebno cak i ako je dosao od 500 response-a
+    }
+  }
 
   useEffect(() => {
     getGenres();
