@@ -1,4 +1,3 @@
-
 import { Box, Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 
 export default function ErrorMessage({ message }) {

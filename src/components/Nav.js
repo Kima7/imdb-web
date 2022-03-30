@@ -12,8 +12,8 @@ import {  AddIcon, HamburgerIcon, ExternalLinkIcon} from '@chakra-ui/icons'
 import { Link } from 'react-router-dom';
 import logo from '../IMDB.jpeg';
 import { useState, useEffect } from 'react';
-import { me, logout } from '../services/HttpServices';
 import { useNavigate } from 'react-router-dom';
+import movieService from '../services/MovieService';
 
 const Nav = () => {
 
@@ -21,21 +21,25 @@ const Nav = () => {
   const navigate = useNavigate();
 
   async function getUser(){
-    const data = await me();
-    setUser(data);     
+    try{
+      const data = await movieService.me();
+      setUser(data);
+    }
+    catch(e){
+      console.log(e);
+    }   
 }
 
-async function postLogout(){
-  const message = await logout();
-    if (!user)
-    {
-      alert(message)
-      navigate('/movies');
-    }
-    else
-    {
-      alert(message)
+async function postLogout(){   
+    try {
+      await movieService.postLogout();
+      localStorage.removeItem('token');
+      setUser(null);
+      alert('Successfuly logged out!')
       navigate('/');
+    } 
+    catch(e) {
+      alert(e);
     }
 }
 

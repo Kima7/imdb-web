@@ -5,29 +5,39 @@ import {
     SimpleGrid,
     FormControl,
     Select,
+    Input,
   } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getMovies, getGenreTypes, filterMovies } from '../services/HttpServices';
+import { getGenreTypes, filterMovies } from '../services/HttpServices';
+import movieService from '../services/MovieService';
 
 const Movies = () => {
 
     const [movies, setMovies] = useState([]);
-    //const [titleSearch, setTitleSearch] = useState();
+    const [titleSearch, setTitleSearch] = useState();
     const [genreFilter, setGenreFilter] = useState('')
     const [allGenres, setAllGenres] = useState([])
 
-    async function moviesList(){
-        const data = await getMovies();
-        setMovies(data.data);    
-    }
+    async function moviesList() {
+        try {
+          //const movies = await movieService.getMovies();   
+          //setMovies(movies.data);
+
+        const {data} = await movieService.getMovies();
+        setMovies(data);
+        } catch (error) {
+            console.log(error);
+          // Ovde bi hendlala neki error u koliko je potrebno cak i ako je dosao od 500 response-a
+        }
+      }
 
     async function getGenres() {
         const data = await getGenreTypes();
         setAllGenres(data);
     }
 
-    async function handleChange(event) {
+    async function handleFilterChange(event) {
         event.preventDefault();
         setGenreFilter(event.target.value);
         if (event.target.value === '')
@@ -41,19 +51,36 @@ const Movies = () => {
         }
       }
 
+    async function handleSearchChange(event){
+        event.preventDefault();
+        setTitleSearch(event.target.value);
+
+    }
+
     useEffect(() => {
         moviesList();
         getGenres();
       },[]);
 
   return (
-      <SimpleGrid>
-          <FormControl marginLeft={'15px'} width={'200px'} >
+      <SimpleGrid >         
+          <FormControl marginLeft={'15px'} display= 'flex' flexDirection= 'row'>
+              
+              <Input
+                className='px-2'
+                type='text' 
+                name='titleSearch' 
+                value={titleSearch}
+                placeholder="search by title.."
+                onChange={handleSearchChange} 
+                width={'200px'}/>               
               <Select
+                width={'200px'} 
                 placeholder="select genre to filter"
                 value={genreFilter}
                 name="genreFilter" 
-                onChange={handleChange}>
+                onChange={handleFilterChange}
+                marginLeft={'15px'}>
                 {allGenres && allGenres.map( g => (
                 <option key={g.id} value={g.type}>{g.type}</option>
                 ))}
