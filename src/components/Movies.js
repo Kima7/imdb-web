@@ -13,9 +13,9 @@ import movieService from '../services/MovieService';
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
-  const [titleSearch, setTitleSearch] = useState();
   const [genreFilter, setGenreFilter] = useState('');
   const [allGenres, setAllGenres] = useState([]);
+  let filterTimeout;
 
   async function moviesList() {
     try {
@@ -28,37 +28,45 @@ const Movies = () => {
   }
 
   async function getGenres() {
-
     try {
-        const {data} = await movieService.getGenreTypes();
-        setAllGenres(data);
-      } catch (error) {
-        console.log(error);
-        // Ovde bi hendlala neki error u koliko je potrebno cak i ako je dosao od 500 response-a
-      }
-  }
-
-  async function handleFilterChange(event) {
-    event.preventDefault();
-    setGenreFilter(event.target.value);
-    if (event.target.value === '') {
-      moviesList();
-    } else {
-        try{
-            const {data} = await movieService.filterMovies({ genre: event.target.value });
-            setMovies(data);
-        }
-        catch(error)
-        {
-            console.log(error);
-        }
+      const { data } = await movieService.getGenreTypes();
+      setAllGenres(data);
+    } catch (error) {
+      console.log(error);
+      // Ovde bi hendlala neki error u koliko je potrebno cak i ako je dosao od 500 response-a
     }
   }
 
-  async function handleSearchChange(event) {
-    event.preventDefault();
-    setTitleSearch(event.target.value);
+  async function handleFilterChange(event) {
+    //event.preventDefault();
+    setGenreFilter(event);
+    if (event === '') {
+      moviesList();
+    } else {
+      try {
+        const { data } = await movieService.filterMovies({ genre: event });
+        setMovies(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
+
+  const handleSearchChange = event => {
+    //setTitleSearch(event);
+    clearTimeout(filterTimeout);
+    if (!event)
+      return handleFilterChange(genreFilter);
+
+    filterTimeout = setTimeout(() => {
+      console.log('====>', event)
+      setMovies(
+        movies.filter(movie =>
+          movie.title.toLowerCase().includes(event.toLowerCase())
+        )
+      );
+    }, 1200);
+  };
 
   useEffect(() => {
     moviesList();
@@ -69,20 +77,15 @@ const Movies = () => {
     <SimpleGrid>
       <FormControl marginLeft={'15px'} display="flex" flexDirection="row">
         <Input
-          className="px-2"
           type="text"
-          name="titleSearch"
-          value={titleSearch}
           placeholder="search by title.."
-          onChange={handleSearchChange}
+          onChange={event => handleSearchChange(event.target.value)}
           width={'200px'}
         />
         <Select
           width={'200px'}
           placeholder="select genre to filter"
-          value={genreFilter}
-          name="genreFilter"
-          onChange={handleFilterChange}
+          onChange={event => handleFilterChange(event.target.value)}
           marginLeft={'15px'}
         >
           {allGenres &&
