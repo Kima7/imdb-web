@@ -1,13 +1,32 @@
+export const methodType = {
+  POST: 'POST',
+  GET: 'GET',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+  DELETE: 'DELETE',
+};
+
+export const route = {
+  register: '/register',
+  login: '/login',
+  logout: '/logout',
+  me: '/me',
+  movies: '/movies',
+  movie: `/movies/id`,
+  genres: '/genres',
+  genreFilter: `/genreFilter/id`,
+  storeLike: '/storeLike',
+};
+
 class ApiService {
   constructor(baseUri) {
     this.baseUri = baseUri;
   }
 
-  async request(url, method, additionalHeaders, body) {
+  async request({ url, method, additionalHeaders, body }) {
     const headers = {
       Accept: 'application/json',
       'Content-type': 'application/json',
-      Authorization: 'Bearer ' + localStorage.getItem('token'),
       ...additionalHeaders,
     };
 
@@ -18,11 +37,9 @@ class ApiService {
     });
 
     const responseData = await response.json();
-    console.log(responseData);
 
     if (!response.ok) {
       throw responseData?.message;
-      //throw new Exception(responseData?.error);
     }
 
     return responseData;

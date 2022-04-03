@@ -1,4 +1,6 @@
-import apiService from './ApiService';
+import apiService, { methodType, route } from './ApiService';
+
+const authHeader = { Authorization: 'Bearer ' + localStorage.getItem('token') };
 
 class AuthService {
   constructor(apiService) {
@@ -7,25 +9,36 @@ class AuthService {
 
   register({ name, email, password, confirm_password }) {
     const user = { name, password, email, confirm_password };
-    return this.apiService.request(
-      '/register',
-      'POST',
-      {},
-      JSON.stringify(user)
-    );
+    return this.apiService.request({
+      url: route.register,
+      method: methodType.POST,
+      body: JSON.stringify(user),
+    });
   }
 
   login({ email, password }) {
     const user = { password, email };
-    return this.apiService.request('/login', 'POST', {}, JSON.stringify(user));
+    return this.apiService.request({
+      url: route.login,
+      method: methodType.POST,
+      body: JSON.stringify(user),
+    });
   }
 
   logout() {
-    return this.apiService.request('/logout', 'POST');
+    return this.apiService.request({
+      url: route.logout,
+      method: methodType.POST,
+      additionalHeaders: authHeader,
+    });
   }
 
   me() {
-    return this.apiService.request('/me', 'POST');
+    return this.apiService.request({
+      url: route.me,
+      method: methodType.POST,
+      additionalHeaders: authHeader,
+    });
   }
 }
 
