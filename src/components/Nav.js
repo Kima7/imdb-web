@@ -16,23 +16,13 @@ import { useNavigate } from 'react-router-dom';
 import authService from '../services/AuthService';
 
 const Nav = () => {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState(localStorage.getItem('token'));
   const navigate = useNavigate();
-
-  async function getUser() {
-    try {
-      const data = await authService.me();
-      setUser(data);
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   async function logout() {
     try {
       await authService.logout();
       localStorage.removeItem('token');
-      setUser(null);
       alert('Successfuly logged out!');
       navigate('/');
     } catch (e) {
@@ -41,7 +31,7 @@ const Nav = () => {
   }
 
   useEffect(() => {
-    getUser();
+    setUser(localStorage.getItem('token'));
   }, [localStorage.getItem('token')]);
 
   return (

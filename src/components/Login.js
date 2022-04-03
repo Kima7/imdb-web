@@ -37,6 +37,7 @@ const Login = () => {
   return (
     <Flex width="full" align="center" justifyContent="center">
       <Box
+        marginTop={"100px"}
         p={10}
         maxWidth="500px"
         borderWidth={2}
@@ -52,6 +53,7 @@ const Login = () => {
             <FormControl isRequired>
               <FormLabel>Email</FormLabel>
               <Input
+                id="email"
                 type="email"
                 value={email}
                 placeholder="test@gmail.com"
@@ -61,6 +63,7 @@ const Login = () => {
             <FormControl mt={6} isRequired>
               <FormLabel>Password</FormLabel>
               <Input
+                id="password"
                 type="password"
                 value={password}
                 placeholder="*****"
