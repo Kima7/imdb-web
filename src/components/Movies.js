@@ -6,10 +6,13 @@ import {
   FormControl,
   Select,
   Input,
+  Button,
+  Flex,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import movieService from '../services/MovieService';
+import { ThumbUp, ThumbDown } from '@mui/icons-material';
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -33,12 +36,10 @@ const Movies = () => {
       setAllGenres(data);
     } catch (error) {
       console.log(error);
-      // Ovde bi hendlala neki error u koliko je potrebno cak i ako je dosao od 500 response-a
     }
   }
 
   async function handleFilterChange(event) {
-    //event.preventDefault();
     setGenreFilter(event);
     if (event === '') {
       moviesList();
@@ -53,13 +54,11 @@ const Movies = () => {
   }
 
   const handleSearchChange = event => {
-    //setTitleSearch(event);
     clearTimeout(filterTimeout);
-    if (!event)
-      return handleFilterChange(genreFilter);
+    if (!event) return handleFilterChange(genreFilter);
 
     filterTimeout = setTimeout(() => {
-      console.log('====>', event)
+      console.log('====>', event);
       setMovies(
         movies.filter(movie =>
           movie.title.toLowerCase().includes(event.toLowerCase())
@@ -68,6 +67,32 @@ const Movies = () => {
     }, 1200);
   };
 
+  async function handleDislike(movieId) {
+    try {
+      const { data } = await movieService.storeLike({
+        movie_id: movieId,
+        like: false,
+      });
+      setMovies(data);
+    } catch (error) {
+      console.log(error);
+      //alert(error);
+    }
+  }
+
+  async function handleLike(movieId) {
+    try {
+      const { data } = await movieService.storeLike({
+        movie_id: movieId,
+        like: true,
+      });
+      setMovies(data);
+    } catch (error) {
+      console.log(error);
+      //alert(error);
+    }
+  }
+
   useEffect(() => {
     moviesList();
     getGenres();
@@ -75,7 +100,12 @@ const Movies = () => {
 
   return (
     <SimpleGrid>
-      <FormControl marginLeft={'15px'} display="flex" flexDirection="row">
+      <FormControl
+        marginLeft={'9px'}
+        display="flex"
+        flexDirection="row"
+        marginTop={'-3.5'}
+      >
         <Input
           type="text"
           placeholder="search by title.."
@@ -103,7 +133,7 @@ const Movies = () => {
             <Box
               key={movie.id}
               p="1"
-              m={3}
+              m={2}
               maxW="xs"
               borderWidth="3px"
               borderRadius="lg"
@@ -111,6 +141,22 @@ const Movies = () => {
               alignItems="center"
               display="table-column"
             >
+              <Box
+                display="flex"
+                alignItems="center"
+                p={1}
+                justifyContent="space-around"
+              >
+                <Badge borderRadius="full" px="2" colorScheme="teal">
+                  {movie.like_count} likes
+                </Badge>
+                <Badge borderRadius="full" px="2" colorScheme="teal">
+                  {movie.dislike_count} dislikes
+                </Badge>
+                <Badge borderRadius="full" px="2" colorScheme="teal">
+                  {movie.visited_count} visited
+                </Badge>
+              </Box>
               <Image
                 src={movie.cover_image}
                 width={'250px'}
@@ -140,6 +186,32 @@ const Movies = () => {
               <Box fontSize="xs" as="h4" lineHeight="tight" isTruncated>
                 {movie.description}
               </Box>
+              <Flex fontSize="xs" justifyContent={'right'}>
+                <Button
+                  color={movie.action === 1 ? 'firebrick' : 'silver'}
+                  disabled={movie.action === 1 ? true : false}
+                  size="xs"
+                  background={'transparent'}
+                  variant="solid"
+                  rounded={['2xl']}
+                  margin={0.5}
+                  onClick={() => handleLike(movie.id)}
+                >
+                  <ThumbUp />
+                </Button>
+                <Button
+                  color={movie.action === 0 ? 'firebrick' : 'silver'}
+                  disabled={movie.action === 0 ? true : false}
+                  size="xs"
+                  background={'transparent'}
+                  variant="solid"
+                  rounded={['2xl']}
+                  margin={0.5}
+                  onClick={() => handleDislike(movie.id)}
+                >
+                  <ThumbDown />
+                </Button>
+              </Flex>
             </Box>
           ))}
       </SimpleGrid>

@@ -6,11 +6,10 @@ import {
   FormLabel,
   Input,
   Button,
-  Center
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
-import movieService from '../services/MovieService';
+import authService from '../services/AuthService';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
@@ -23,10 +22,10 @@ const Register = () => {
     name === '' || email === '' || password === '' || confirm_password === '';
   const navigate = useNavigate();
 
-  const postRegister = async () => {
+  const register = async () => {
     setError('');
     try {
-      await movieService.postRegister({
+      await authService.register({
         name: name,
         email: email,
         password: password,
@@ -40,20 +39,15 @@ const Register = () => {
   };
 
   return (
-    <Flex justify={'center'} width="full" >
-      <Box
-        p={10}      
-        borderWidth={2}
-        borderRadius={8}
-        boxShadow="lg"
-      >
+    <Flex justify={'center'} width="full">
+      <Box p={10} borderWidth={2} borderRadius={8} boxShadow="lg">
         <Box textAlign="center">
           <Heading>Register</Heading>
         </Box>
         <Box my={4} textAlign="left">
           <form>
             {error !== '' && <ErrorMessage message={error} />}
-            <FormControl isRequired> 
+            <FormControl isRequired>
               <FormLabel>Name</FormLabel>
               <Input
                 type="text"
@@ -94,7 +88,7 @@ const Register = () => {
           </form>
           <Button
             disabled={notFill}
-            onClick={postRegister}
+            onClick={register}
             type="submit"
             background="seagreen"
             colorScheme="green"

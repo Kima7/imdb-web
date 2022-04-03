@@ -10,7 +10,7 @@ import {
 import { useState } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
 import { useNavigate } from 'react-router-dom';
-import movieService from '../services/MovieService';
+import authService from '../services/AuthService';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,10 +19,10 @@ const Login = () => {
   const notFill = email === '' || password === '';
   const navigate = useNavigate();
 
-  const postLogin = async () => {
+  const login = async () => {
     setError('');
     try {
-      const data = await movieService.postLogin({
+      const data = await authService.login({
         email: email,
         password: password,
       });
@@ -70,7 +70,7 @@ const Login = () => {
           </form>
           <Button
             disabled={notFill}
-            onClick={postLogin}
+            onClick={login}
             type="submit"
             background="seagreen"
             colorScheme="green"
