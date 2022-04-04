@@ -16,6 +16,7 @@ export const route = {
   genres: '/genres',
   genreFilter: `/genreFilter/id`,
   storeLike: '/storeLike',
+  storeComment: '/storeComment',
 };
 
 class ApiService {

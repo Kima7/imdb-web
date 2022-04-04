@@ -16,7 +16,7 @@ class MovieService {
 
   getMovie({ id }) {
     return this.apiService.request({
-      url: route.movie.replace('id',id),
+      url: route.movie.replace('id', id),
       method: methodType.GET,
       additionalHeaders: authHeader,
     });
@@ -42,7 +42,7 @@ class MovieService {
 
   filterMovies({ genre }) {
     return this.apiService.request({
-      url: route.genreFilter.replace('id',genre),
+      url: route.genreFilter.replace('id', genre),
       method: methodType.GET,
       additionalHeaders: authHeader,
     });
@@ -55,6 +55,16 @@ class MovieService {
       method: methodType.POST,
       additionalHeaders: authHeader,
       body: JSON.stringify(likeData),
+    });
+  }
+
+  storeComment({ movie_id, message }) {
+    const commentData = { movie_id, message };
+    return this.apiService.request({
+      url: route.storeComment,
+      method: methodType.POST,
+      additionalHeaders: authHeader,
+      body: JSON.stringify(commentData),
     });
   }
 }
