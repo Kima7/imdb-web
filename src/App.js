@@ -8,7 +8,9 @@ import Nav from './components/Nav';
 import Movies from './components/Movies';
 import Movie from './components/Movie';
 import AddMovie from './components/AddMovie';
+import WatchList from './components/WatchList';
 import { Outlet, Navigate } from 'react-router-dom';
+import PopularMovies from './components/PopularMovies';
 
 function App() {
   const config = {
@@ -29,17 +31,23 @@ function App() {
     <ChakraProvider theme={extendTheme({ config })}>
       <Nav />
       <Routes>
-        <Route exact path="/" element={<LogoHome />} />
-        <Route exact path="login" element={<Login />} />
-        <Route exact path="register" element={<Register />} />
-        <Route exact path="movies" element={<AuthenticatedRoute />}>
-          <Route exact path="" element={<Movies />} />
+        <Route path="/" element={<LogoHome />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="movies" element={<AuthenticatedRoute />}>
+          <Route path="" element={<Movies />} />
         </Route>
-        <Route exact path="movie/:id" element={<AuthenticatedRoute />}>
-          <Route exact path="" element={<Movie />} />
+        <Route path="movie/:id" element={<AuthenticatedRoute />}>
+          <Route path="" element={<Movie />} />
         </Route>
-        <Route exact path="addMovie" element={<AuthenticatedRoute />}>
-          <Route exact path="" element={<AddMovie />} />
+        <Route path="addMovie" element={<AuthenticatedRoute />}>
+          <Route path="" element={<AddMovie />} />
+        </Route>
+        <Route path="watchlist" element={<AuthenticatedRoute />}>
+          <Route path="" element={<WatchList />} />
+        </Route>
+        <Route path="topRated" element={<AuthenticatedRoute />}>
+          <Route path="" element={<PopularMovies />} />
         </Route>
       </Routes>
     </ChakraProvider>

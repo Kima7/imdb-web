@@ -67,6 +67,42 @@ class MovieService {
       body: JSON.stringify(commentData),
     });
   }
+
+  relatedMovies({ movie_id }) {
+    return this.apiService.request({
+      url: route.relatedMovies.replace('id', movie_id),
+      method: methodType.GET,
+      additionalHeaders: authHeader,
+    });
+  }
+
+  addToWatchList({ movie_id, watched }) {
+    const watchListData = { movie_id, watched };
+    return this.apiService.request({
+      url: route.addToWatchList,
+      method: methodType.POST,
+      additionalHeaders: authHeader,
+      body: JSON.stringify(watchListData),
+    });
+  }
+
+  getWatchList() {
+    return this.apiService.request({
+      url: route.getWatchList,
+      method: methodType.GET,
+      additionalHeaders: authHeader
+    });
+  }
+
+  removeFromWatchList({ movie_id }) {
+    const watchListData = { movie_id };
+    return this.apiService.request({
+      url: route.removeFromWatchList,
+      method: methodType.DELETE,
+      additionalHeaders: authHeader,
+      body: JSON.stringify(watchListData),
+    });
+  }
 }
 
 export default new MovieService(apiService);

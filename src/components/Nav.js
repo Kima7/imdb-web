@@ -8,7 +8,13 @@ import {
   MenuItem,
   IconButton,
 } from '@chakra-ui/react';
-import { AddIcon, HamburgerIcon, ExternalLinkIcon } from '@chakra-ui/icons';
+import {
+  AddIcon,
+  HamburgerIcon,
+  ExternalLinkIcon,
+  CheckCircleIcon,
+  CalendarIcon,
+} from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import logo from '../IMDB.jpeg';
 import { useState, useEffect } from 'react';
@@ -96,6 +102,12 @@ const Nav = () => {
             <MenuList>
               <MenuItem icon={<AddIcon />} as={Link} to="/addMovie">
                 Create movie
+              </MenuItem>
+              <MenuItem icon={<CalendarIcon />} as={Link} to="/watchlist">
+                Watchlist
+              </MenuItem>
+              <MenuItem icon={<CheckCircleIcon />} as={Link} to="/topRated">
+                Top rated
               </MenuItem>
               <MenuItem icon={<ExternalLinkIcon />} onClick={logout}>
                 Logout

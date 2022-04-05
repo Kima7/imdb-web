@@ -12,7 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import movieService from '../services/MovieService';
-import { ThumbUp, ThumbDown } from '@mui/icons-material';
+import { ThumbUp, ThumbDown, BookmarkAdd } from '@mui/icons-material';
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -90,6 +90,30 @@ const Movies = () => {
     } catch (error) {
       console.log(error);
       //alert(error);
+    }
+  }
+
+  async function addToWatchList(movieId) {
+    try {
+      await movieService.addToWatchList({
+        movie_id: movieId,
+      });
+      moviesList();
+      alert('Added to watchlist!');
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function removeFromWatchList(movieId) {
+    try {
+      await movieService.removeFromWatchList({
+        movie_id: movieId,
+      });
+      moviesList();
+      alert('Removed from watchlist!');
+    } catch (error) {
+      alert(error);
     }
   }
 
@@ -186,31 +210,63 @@ const Movies = () => {
               <Box fontSize="xs" as="h4" lineHeight="tight" isTruncated>
                 {movie.description}
               </Box>
-              <Flex fontSize="xs" justifyContent={'right'}>
-                <Button
-                  color={movie.action === 1 ? 'firebrick' : 'silver'}
-                  disabled={movie.action === 1 ? true : false}
-                  size="xs"
-                  background={'transparent'}
-                  variant="solid"
-                  rounded={['2xl']}
-                  margin={0.5}
-                  onClick={() => handleLike(movie.id)}
-                >
-                  <ThumbUp />
-                </Button>
-                <Button
-                  color={movie.action === 0 ? 'firebrick' : 'silver'}
-                  disabled={movie.action === 0 ? true : false}
-                  size="xs"
-                  background={'transparent'}
-                  variant="solid"
-                  rounded={['2xl']}
-                  margin={0.5}
-                  onClick={() => handleDislike(movie.id)}
-                >
-                  <ThumbDown />
-                </Button>
+              <Flex
+                p={1}
+                fontSize="xs"
+                justifyContent={'space-between'}
+                marginTop={4}
+              >
+                <Flex marginLeft={-3}>
+                  <Button
+                    color={movie.watched !== null ? 'yellow' : 'silver'}
+                    size="xs"
+                    background={'transparent'}
+                    colorScheme={'transparent'}
+                    variant="solid"
+                    rounded={['2xl']}
+                    margin={0.5}
+                    onClick={() =>
+                      movie.watched === null
+                        ? addToWatchList(movie.id)
+                        : removeFromWatchList(movie.id)
+                    }
+                  >
+                    <BookmarkAdd />
+                  </Button>
+                  {movie.watched == true && (
+                    <Badge  borderRadius="full" p={1} marginLeft={-2} colorScheme="yellow" fontSize="xs">
+                      watched
+                    </Badge>
+                  )}
+                </Flex>
+                <Flex marginRight={-3}>
+                  <Button
+                    color={movie.action === 1 ? 'firebrick' : 'silver'}
+                    disabled={movie.action === 1 ? true : false}
+                    size="xs"
+                    background={'transparent'}
+                    colorScheme={'transparent'}
+                    variant="solid"
+                    rounded={['2xl']}
+                    marginRight={-3}
+                    onClick={() => handleLike(movie.id)}
+                  >
+                    <ThumbUp />
+                  </Button>
+                  <Button marginRight={-2}
+                    color={movie.action === 0 ? 'firebrick' : 'silver'}
+                    disabled={movie.action === 0 ? true : false}
+                    size="xs"
+                    background={'transparent'}
+                    colorScheme={'transparent'}
+                    variant="solid"
+                    rounded={['2xl']}
+                    margin={0.5}
+                    onClick={() => handleDislike(movie.id)}
+                  >
+                    <ThumbDown />
+                  </Button>
+                </Flex>
               </Flex>
             </Box>
           ))}

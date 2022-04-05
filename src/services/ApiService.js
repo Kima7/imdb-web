@@ -17,6 +17,10 @@ export const route = {
   genreFilter: `/genreFilter/id`,
   storeLike: '/storeLike',
   storeComment: '/storeComment',
+  relatedMovies: `/relatedMovies/id`,
+  addToWatchList : '/addToWatchList',
+  getWatchList : '/getWatchList',
+  removeFromWatchList : '/removeFromWatchList'
 };
 
 class ApiService {

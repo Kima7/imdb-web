@@ -5,17 +5,20 @@ import {
   Box,
   Badge,
   Button,
-  Textarea,
   Input,
   Text,
+  Divider,
+  Heading,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import movieService from '../services/MovieService';
 import {
   ThumbUp,
   ThumbDown,
   Comment,
   CommentsDisabled,
+  MovieCreation,
 } from '@mui/icons-material';
 
 const Movie = () => {
@@ -23,6 +26,8 @@ const Movie = () => {
   const [movie, setMovie] = useState();
   const [showComments, setShowComments] = useState(false);
   const [comment, setComment] = useState('');
+  const [showRelatedMovies, setShowRelatedMovies] = useState(false);
+  const [relatedMovies, setRelatedMovies] = useState([]);
 
   const getMovie = async () => {
     try {
@@ -72,9 +77,20 @@ const Movie = () => {
     }
   }
 
+  async function getRelatedMovies() {
+    try {
+      const movie_id = params.id;
+      const { data } = await movieService.relatedMovies({ movie_id });
+      setRelatedMovies(data);
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   useEffect(() => {
     getMovie();
-  }, []);
+    getRelatedMovies();
+  }, [params.id]);
 
   return (
     <Flex
@@ -84,6 +100,45 @@ const Movie = () => {
       justify={'center'}
       alignItems={'center'}
     >
+      {showRelatedMovies && (
+        <Box
+          m={4}
+          p={2}
+          maxW="sm"
+          borderWidth="3px"
+          borderRadius="lg"
+          overflow="hidden"
+        >
+          <Flex
+            paddingBottom={2}
+            width="full"
+            align={'row'}
+            justify={'row'}
+            alignItems={'row'}
+          >
+            <Heading fontSize={'lg'} paddingLeft={2}>
+              Related movies
+            </Heading>
+          </Flex>
+          {relatedMovies &&
+            relatedMovies.length > 0 &&
+            relatedMovies.map(relatedMovie => (
+              <Box
+                key={relatedMovie.id}
+                p={2}
+                maxW="sm"
+                borderWidth="3px"
+                borderRadius="lg"
+                overflow="hidden"
+              >
+                <Link to={`/movie/${relatedMovie.id}`} key={relatedMovie.id}>
+                  {relatedMovie.title}
+                </Link>
+              </Box>
+            ))}
+          {relatedMovies.length === 0 && <Text>No related movies yet!</Text>}
+        </Box>
+      )}
       {movie && (
         <Box
           key={movie.id}
@@ -131,53 +186,68 @@ const Movie = () => {
           <Box fontSize="s" lineHeight="tight">
             {movie.description}
           </Box>
-          <Flex p={1} justifyContent="right">
-            <Button
-              color={movie.action === 1 ? 'firebrick' : 'silver'}
-              disabled={movie.action === 1 ? true : false}
-              size="xs"
-              background={'transparent'}
-              variant="solid"
-              rounded={['2xl']}
-              margin={0.5}
-              onClick={() => handleLike(movie.id)}
-            >
-              <ThumbUp />
-            </Button>
-            <Button
-              color={movie.action === 0 ? 'firebrick' : 'silver'}
-              disabled={movie.action === 0 ? true : false}
-              size="xs"
-              background={'transparent'}
-              variant="solid"
-              rounded={['2xl']}
-              margin={0.5}
-              onClick={() => handleDislike(movie.id)}
-            >
-              <ThumbDown />
-            </Button>
-            <Button
-              color={'silver'}
-              size="xs"
-              background={'transparent'}
-              variant="solid"
-              rounded={['2xl']}
-              margin={0.5}
-              onClick={() => setShowComments(!showComments)}
-            >
-              {!showComments ? <Comment /> : <CommentsDisabled />}
-            </Button>
+          <Flex p={1} justifyContent="space-between" marginTop={5}>
+            <Flex>
+              <Button
+                color={'silver'}
+                size="xs"
+                background={'transparent'}
+                variant="solid"
+                rounded={['2xl']}
+                margin={0.5}
+                onClick={() => setShowRelatedMovies(!showRelatedMovies)}
+              >
+                <MovieCreation /> related movies
+              </Button>
+            </Flex>
+            <Flex>
+              <Button
+                color={movie.action === 1 ? 'firebrick' : 'silver'}
+                disabled={movie.action === 1 ? true : false}
+                size="xs"
+                background={'transparent'}
+                variant="solid"
+                rounded={['2xl']}
+                margin={0.5}
+                onClick={() => handleLike(movie.id)}
+              >
+                <ThumbUp />
+              </Button>
+              <Button
+                color={movie.action === 0 ? 'firebrick' : 'silver'}
+                disabled={movie.action === 0 ? true : false}
+                size="xs"
+                background={'transparent'}
+                variant="solid"
+                rounded={['2xl']}
+                margin={0.5}
+                onClick={() => handleDislike(movie.id)}
+              >
+                <ThumbDown />
+              </Button>
+              <Button
+                color={'silver'}
+                size="xs"
+                background={'transparent'}
+                variant="solid"
+                rounded={['2xl']}
+                margin={0.5}
+                onClick={() => setShowComments(!showComments)}
+              >
+                {!showComments ? <Comment /> : <CommentsDisabled />}
+              </Button>
+            </Flex>
           </Flex>
         </Box>
       )}
       {showComments && (
         <Box
+          m={4}
           p={2}
           maxW="sm"
           borderWidth="3px"
           borderRadius="lg"
           overflow="hidden"
-          alignItems="center"
         >
           <Flex
             paddingBottom={2}
@@ -187,6 +257,8 @@ const Movie = () => {
             alignItems={'row'}
           >
             <Input
+              mb={3}
+              mr={4}
               id="comment"
               type="text"
               value={comment}
@@ -196,6 +268,7 @@ const Movie = () => {
               onChange={event => setComment(event.currentTarget.value)}
             />
             <Button
+              p={4}
               color={'silver'}
               size="sm"
               variant="solid"
@@ -211,15 +284,10 @@ const Movie = () => {
           {movie &&
             movie.comments.length > 0 &&
             movie.comments.map(comment => (
-              <Textarea
-                id={comment.id}
-                maxWidth={'250px'}
-                size="sm"
-                resize={'vertical'}
-                placeholder="Write your comment here.."
-                value={comment.message}
-                readOnly
-              />
+              <div key={comment.id}>
+                <Text pt={2}>{comment.message}</Text>
+                <Divider pt={4} />
+              </div>
             ))}
           {movie.comments.length === 0 && (
             <Text>No comments on this movie!</Text>
