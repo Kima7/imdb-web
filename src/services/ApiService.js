@@ -18,9 +18,9 @@ export const route = {
   storeLike: '/storeLike',
   storeComment: '/storeComment',
   relatedMovies: `/relatedMovies/id`,
-  addToWatchList : '/addToWatchList',
-  getWatchList : '/getWatchList',
-  removeFromWatchList : '/removeFromWatchList'
+  addToWatchList: '/addToWatchList',
+  getWatchList: '/getWatchList',
+  removeFromWatchList: '/removeFromWatchList',
 };
 
 class ApiService {

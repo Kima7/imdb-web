@@ -6,9 +6,9 @@ class MovieService {
     this.apiService = apiService;
   }
 
-  getMovies() {
+  getMovies({ url }) {
     return this.apiService.request({
-      url: route.movies,
+      url: route.movies + url,
       method: methodType.GET,
       additionalHeaders: authHeader,
     });
@@ -90,7 +90,7 @@ class MovieService {
     return this.apiService.request({
       url: route.getWatchList,
       method: methodType.GET,
-      additionalHeaders: authHeader
+      additionalHeaders: authHeader,
     });
   }
 

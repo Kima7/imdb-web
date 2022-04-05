@@ -9,6 +9,7 @@ import {
   Button,
   Flex,
 } from '@chakra-ui/react';
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import movieService from '../services/MovieService';
@@ -18,12 +19,28 @@ const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [genreFilter, setGenreFilter] = useState('');
   const [allGenres, setAllGenres] = useState([]);
+  const [nextPage, setNextPage] = useState('');
+  const [prevPage, setPrevPage] = useState('');
   let filterTimeout;
 
-  async function moviesList() {
+  async function moviesList(url) {
     try {
-      const { data } = await movieService.getMovies();
-      setMovies(data);
+      const data = await movieService.getMovies({ url: url });
+      console.log(data);
+      setMovies(data.data);
+      if (data.links.next) {
+        let path = data.links.next.split('?');
+        setNextPage('?' + path[1]);
+      } else {
+        setNextPage('');
+      }
+
+      if (data.links.prev) {
+        let path = data.links.prev.split('?');
+        setPrevPage('?' + path[1]);
+      } else {
+        setPrevPage('');
+      }
     } catch (error) {
       console.log(error);
       // Ovde bi hendlala neki error u koliko je potrebno cak i ako je dosao od 500 response-a
@@ -118,14 +135,14 @@ const Movies = () => {
   }
 
   useEffect(() => {
-    moviesList();
+    moviesList('?page=1');
     getGenres();
   }, []);
 
   return (
     <SimpleGrid>
       <FormControl
-        marginLeft={'9px'}
+        marginLeft={4}
         display="flex"
         flexDirection="row"
         marginTop={'-3.5'}
@@ -150,14 +167,14 @@ const Movies = () => {
             ))}
         </Select>
       </FormControl>
-      <SimpleGrid columns={{ sm: 2, md: 5 }} textAlign="center">
+      <SimpleGrid columns={{ sm: 2, md: 5 }} textAlign="center" ml={3}>
         {movies &&
           movies.length > 0 &&
           movies.map(movie => (
             <Box
               key={movie.id}
-              p="1"
-              m={2}
+              p={1}
+              m={1}
               maxW="xs"
               borderWidth="3px"
               borderRadius="lg"
@@ -182,10 +199,10 @@ const Movies = () => {
                 </Badge>
               </Box>
               <Image
+                paddingLeft={8}
                 src={movie.cover_image}
-                width={'250px'}
-                height={'220px'}
-                borderRadius="2xl"
+                width={'230px'}
+                height={'170px'}
               />
               <Box p="1">
                 <Box
@@ -214,7 +231,7 @@ const Movies = () => {
                 p={1}
                 fontSize="xs"
                 justifyContent={'space-between'}
-                marginTop={4}
+                marginTop={2.5}
               >
                 <Flex marginLeft={-3}>
                   <Button
@@ -234,7 +251,13 @@ const Movies = () => {
                     <BookmarkAdd />
                   </Button>
                   {movie.watched == true && (
-                    <Badge  borderRadius="full" p={1} marginLeft={-2} colorScheme="yellow" fontSize="xs">
+                    <Badge
+                      borderRadius="full"
+                      p={1}
+                      marginLeft={-2}
+                      colorScheme="yellow"
+                      fontSize="xs"
+                    >
                       watched
                     </Badge>
                   )}
@@ -253,7 +276,8 @@ const Movies = () => {
                   >
                     <ThumbUp />
                   </Button>
-                  <Button marginRight={-2}
+                  <Button
+                    marginRight={-2}
                     color={movie.action === 0 ? 'firebrick' : 'silver'}
                     disabled={movie.action === 0 ? true : false}
                     size="xs"
@@ -270,6 +294,22 @@ const Movies = () => {
               </Flex>
             </Box>
           ))}
+      </SimpleGrid>
+      <SimpleGrid>
+        <Flex justifyContent={'center'} marginTop={1.5} marginLeft={1}>
+          <Button
+            onClick={() => moviesList(prevPage)}
+            disabled={prevPage == '' ? true : false}
+          >
+            <ArrowBackIcon />
+          </Button>
+          <Button
+            onClick={() => moviesList(nextPage)}
+            disabled={nextPage == '' ? true : false}
+          >
+            <ArrowForwardIcon />
+          </Button>
+        </Flex>
       </SimpleGrid>
     </SimpleGrid>
   );
