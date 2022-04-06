@@ -10,6 +10,7 @@ import {
   Divider,
   Heading,
 } from '@chakra-ui/react';
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import movieService from '../services/MovieService';
@@ -19,6 +20,7 @@ import {
   Comment,
   CommentsDisabled,
   MovieCreation,
+  BookmarkAdd,
 } from '@mui/icons-material';
 
 const Movie = () => {
@@ -28,6 +30,7 @@ const Movie = () => {
   const [comment, setComment] = useState('');
   const [showRelatedMovies, setShowRelatedMovies] = useState(false);
   const [relatedMovies, setRelatedMovies] = useState([]);
+  const [showMore, setShowMore] = useState(false);
 
   const getMovie = async () => {
     try {
@@ -82,6 +85,36 @@ const Movie = () => {
       const movie_id = params.id;
       const { data } = await movieService.relatedMovies({ movie_id });
       setRelatedMovies(data);
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function addToWatchList(movieId, watched) {
+    try {
+      if (watched !== true)
+        await movieService.addToWatchList({
+          movie_id: movieId,
+        });
+      else
+        await movieService.addToWatchList({
+          movie_id: movieId,
+          watched: true,
+        });
+      getMovie();
+      alert('Added to watchlist!');
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function removeFromWatchList(movieId) {
+    try {
+      await movieService.removeFromWatchList({
+        movie_id: movieId,
+      });
+      getMovie();
+      alert('Removed from watchlist!');
     } catch (error) {
       alert(error);
     }
@@ -149,6 +182,47 @@ const Movie = () => {
           overflow="hidden"
           alignItems="center"
         >
+          <Box display="flex" p={1} justifyContent="left">
+            <Button
+              color={movie.watched !== null ? 'yellow' : 'silver'}
+              size="xs"
+              background={'transparent'}
+              colorScheme={'transparent'}
+              variant="solid"
+              rounded={['2xl']}
+              margin={0.5}
+              onClick={() =>
+                movie.watched === null
+                  ? addToWatchList(movie.id)
+                  : removeFromWatchList(movie.id)
+              }
+            >
+              <BookmarkAdd />
+            </Button>
+            {movie.watched == true ? (
+              <Badge
+                borderRadius="full"
+                p={1}
+                marginLeft={-2}
+                colorScheme="yellow"
+                fontSize="xs"
+              >
+                watched
+              </Badge>
+            ) : (
+              <Button
+                p={4}
+                color={'silver'}
+                size="sm"
+                variant="solid"
+                rounded={['2xl']}
+                margin={0.5}
+                onClick={() => addToWatchList(movie.id, true)}
+              >
+                did you watched it?
+              </Button>
+            )}
+          </Box>
           <Box display="flex" p={1} justifyContent="space-around">
             <Badge borderRadius="full" px="2" colorScheme="teal">
               {movie.like_count} likes
@@ -281,14 +355,37 @@ const Movie = () => {
               Post{' '}
             </Button>
           </Flex>
-          {movie &&
+          {showMore &&
+            movie &&
             movie.comments.length > 0 &&
             movie.comments.map(comment => (
               <div key={comment.id}>
                 <Text pt={2}>{comment.message}</Text>
-                <Divider pt={4} />
+                <Divider />
               </div>
             ))}
+          {!showMore &&
+            movie &&
+            movie.comments.length > 0 &&
+            movie.comments.slice(0, 4).map(comment => (
+              <div key={comment.id}>
+                <Text pt={2}>{comment.message}</Text>
+                <Divider />
+              </div>
+            ))}
+          <Flex justify={'center'}>
+            <Button
+              p={4}
+              color={'silver'}
+              size="xs"
+              variant="solid"
+              //rounded={['2xl']}
+              margin={0.5}
+              onClick={() => setShowMore(!showMore)}
+            >
+              {showMore ? <ChevronUpIcon/> :  <ChevronDownIcon/>}
+            </Button>
+          </Flex>
           {movie.comments.length === 0 && (
             <Text>No comments on this movie!</Text>
           )}
