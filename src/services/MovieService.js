@@ -76,6 +76,14 @@ class MovieService {
     });
   }
 
+  popularMovies() {
+    return this.apiService.request({
+      url: route.popularMovies,
+      method: methodType.GET,
+      additionalHeaders: authHeader,
+    });
+  }
+
   addToWatchList({ movie_id, watched }) {
     const watchListData = { movie_id, watched };
     return this.apiService.request({

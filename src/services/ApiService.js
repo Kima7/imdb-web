@@ -21,6 +21,7 @@ export const route = {
   addToWatchList: '/addToWatchList',
   getWatchList: '/getWatchList',
   removeFromWatchList: '/removeFromWatchList',
+  popularMovies : '/popularMovies',
 };
 
 class ApiService {
