@@ -51,7 +51,6 @@ const Movie = () => {
       getMovie();
     } catch (error) {
       console.log(error);
-      //alert(error);
     }
   }
 
@@ -379,11 +378,10 @@ const Movie = () => {
               color={'silver'}
               size="xs"
               variant="solid"
-              //rounded={['2xl']}
               margin={0.5}
               onClick={() => setShowMore(!showMore)}
             >
-              {showMore ? <ChevronUpIcon/> :  <ChevronDownIcon/>}
+              {showMore ? <ChevronUpIcon /> : <ChevronDownIcon />}
             </Button>
           </Flex>
           {movie.comments.length === 0 && (

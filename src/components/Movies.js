@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import movieService from '../services/MovieService';
 import { ThumbUp, ThumbDown, BookmarkAdd } from '@mui/icons-material';
+import debounce from 'lodash.debounce';
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -21,12 +22,10 @@ const Movies = () => {
   const [allGenres, setAllGenres] = useState([]);
   const [nextPage, setNextPage] = useState('');
   const [prevPage, setPrevPage] = useState('');
-  let filterTimeout;
 
   async function moviesList(url) {
     try {
       const data = await movieService.getMovies({ url: url });
-      console.log(data);
       setMovies(data.data);
       if (data.links.next) {
         let path = data.links.next.split('?');
@@ -43,7 +42,6 @@ const Movies = () => {
       }
     } catch (error) {
       console.log(error);
-      // Ovde bi hendlala neki error u koliko je potrebno cak i ako je dosao od 500 response-a
     }
   }
 
@@ -59,29 +57,53 @@ const Movies = () => {
   async function handleFilterChange(event) {
     setGenreFilter(event);
     if (event === '') {
-      moviesList();
+      moviesList('?page=1');
     } else {
       try {
         const { data } = await movieService.filterMovies({ genre: event });
         setMovies(data);
+        if (data.links?.next) {
+          let path = data.links.next.split('?');
+          setNextPage('?' + path[1]);
+        } else {
+          setNextPage('');
+        }
+
+        if (data.links?.prev) {
+          let path = data.links.prev.split('?');
+          setPrevPage('?' + path[1]);
+        } else {
+          setPrevPage('');
+        }
       } catch (error) {
         console.log(error);
       }
     }
   }
 
-  const handleSearchChange = event => {
-    clearTimeout(filterTimeout);
-    if (!event) return handleFilterChange(genreFilter);
+  const debouncedHandleSearchChange = debounce(async value => {
+    const { data } = await movieService.movieSearch({
+      searchValue: value,
+      genre: genreFilter,
+    });
+    setMovies(data);
+    if (data.links?.next) {
+      let path = data.links.next.split('?');
+      setNextPage('?' + path[1]);
+    } else {
+      setNextPage('');
+    }
 
-    filterTimeout = setTimeout(() => {
-      console.log('====>', event);
-      setMovies(
-        movies.filter(movie =>
-          movie.title.toLowerCase().includes(event.toLowerCase())
-        )
-      );
-    }, 1200);
+    if (data.links?.prev) {
+      let path = data.links.prev.split('?');
+      setPrevPage('?' + path[1]);
+    } else {
+      setPrevPage('');
+    }
+  }, 750);
+
+  const handleSearchChange = value => {
+    debouncedHandleSearchChange(value);
   };
 
   async function handleDislike(movieId) {
@@ -93,7 +115,6 @@ const Movies = () => {
       setMovies(data);
     } catch (error) {
       console.log(error);
-      //alert(error);
     }
   }
 
@@ -106,7 +127,6 @@ const Movies = () => {
       setMovies(data);
     } catch (error) {
       console.log(error);
-      //alert(error);
     }
   }
 

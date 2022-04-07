@@ -48,6 +48,22 @@ class MovieService {
     });
   }
 
+  movieSearch({ searchValue, genre }) {
+    let params = '';
+    if (searchValue && genre) {
+      params = `?searchValue=${searchValue}&genre=${genre}`;
+    } else if (searchValue) {
+      params += `?searchValue=${searchValue}`;
+    } else if (genre) {
+      params += `?searchValue=&genre=${genre}`;
+    }
+    return this.apiService.request({
+      url: route.movieSearch + params,
+      method: methodType.GET,
+      additionalHeaders: authHeader,
+    });
+  }
+
   storeLike({ movie_id, like }) {
     const likeData = { movie_id, like };
     return this.apiService.request({

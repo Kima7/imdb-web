@@ -23,7 +23,6 @@ const WatchList = () => {
       setMovies(data);
     } catch (error) {
       console.log(error);
-      // Ovde bi hendlala neki error u koliko je potrebno cak i ako je dosao od 500 response-a
     }
   }
 
@@ -36,7 +35,6 @@ const WatchList = () => {
       setMovies(data);
     } catch (error) {
       console.log(error);
-      //alert(error);
     }
   }
 
@@ -49,7 +47,6 @@ const WatchList = () => {
       setMovies(data);
     } catch (error) {
       console.log(error);
-      //alert(error);
     }
   }
 
